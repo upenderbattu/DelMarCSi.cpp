@@ -28,7 +28,8 @@ jobs:
       with:
         languages: ${{ matrix.language }}
     - name: AutoBuild
-      uses: github/codeql-action/autobuild@v2
+      run: |
+        cmake --build ./build --config ${{matrix.build_type}}
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
