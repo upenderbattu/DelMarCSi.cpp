@@ -20,9 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'c-cpp' ]
-    container:
-      image: codeql-container:f0f91db
+        language: [ 'cpp' ]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -30,10 +28,8 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-    - name: Build
-      run: |
-        ./configure
-        make
+    - name: AutoBuild
+      uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
