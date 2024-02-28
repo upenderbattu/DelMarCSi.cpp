@@ -27,6 +27,9 @@ jobs:
       run: |
            cd ..
            pwd && ls -al 
+           ls -al DelMarCSi.cpp
+           ls -al .git
+           
            
 
     - name: Initialize CodeQL
