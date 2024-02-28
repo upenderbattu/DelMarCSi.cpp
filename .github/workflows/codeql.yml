@@ -23,6 +23,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Test
+      run: |
+           cd ..
+           pwd && ls -al 
+           
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
