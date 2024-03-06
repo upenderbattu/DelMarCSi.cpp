@@ -1,0 +1,54 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  schedule:
+    - cron: '23 16 * * 5'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+           
+           
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+    - name: Install dependencies
+      run: sudo apt-get install libboost-dev libpoco-dev libwxbase3.0-dev libfmt-dev doxygen
+
+    - name: Install Paho C client
+      run: cd && git clone https://github.com/eclipse/paho.mqtt.c.git && cd paho.mqtt.c && cmake -Bbuild -H. -DPAHO_ENABLE_TESTING=OFF -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON && sudo cmake --build build/ --target install && sudo ldconfig
+
+    - name: Install Paho C++ client
+      run: cd && git clone https://github.com/eclipse/paho.mqtt.cpp.git && cd paho.mqtt.cpp && cmake -Bbuild -H. -DPAHO_WITH_SSL=ON -DPAHO_BUILD_DOCUMENTATION=TRUE && sudo cmake --build build/ --target install && sudo ldconfig
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+    - name: Send Slack notification
+      id: slackThreadResponse
+      uses: ./
+      with:
+         channel_id: "C06MSBUND8D"
+         status: ${{ job.status }}
+         text: "CodeQL analysis completed with status: ${{ job.status }}"
+      env:
+         SLACK_WEBHOOK: "https://hooks.slack.com/services/"
