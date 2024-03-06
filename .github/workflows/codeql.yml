@@ -51,4 +51,4 @@ jobs:
          status: ${{ job.status }}
          text: "CodeQL analysis completed with status: ${{ job.status }}"
       env:
-         SLACK_WEBHOOK: "https://hooks.slack.com/services/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"
+         SLACK_WEBHOOK: "https://hooks.slack.com/services/"
